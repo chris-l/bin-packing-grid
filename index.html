@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>&lt;bin-packing-grid&gt;</title>
+
+    <!-- Importing Web Component's Polyfill -->
+    <script>if (!('registerElement' in document
+      && 'createShadowRoot' in HTMLElement.prototype
+      && 'import' in document.createElement('link')
+      && 'content' in document.createElement('template'))) {
+            document.write('<script src="/bower_components/webcomponentsjs/webcomponents.min.js"><\/script>');
+      }</script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
+
+    <!-- Importing Custom Elements -->
+    <link rel="import" href="src/bin-packing-grid.html">
+  </head>
+  <body>
+
+    <polymer-element name="demo-page" noscript>
+      <template>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+          bin-packing-grid {
+            margin: auto;
+          }
+          bin-packing-item {
+            background-color: #777;
+            padding: 15px;
+            color: white;
+          }
+        </style>
+        <!-- Using Custom Elements -->
+        <div class="container-fluid">
+          <h1>grid demo</h1>
+          <bin-packing-grid cellsize="150">
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="3" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
+          </bin-packing-grid>
+        </div>
+      </template>
+    </polymer-element>
+    <div class="container">
+      <demo-page></demo-page>
+    </div>
+  </body>
+</html>

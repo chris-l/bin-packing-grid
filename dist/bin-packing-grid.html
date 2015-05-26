@@ -1,0 +1,51 @@
+<!--
+  <bin-packing-grid>
+
+  @element bin-packing-grid
+  @demo https://chris-l.github.io/bin-packing-grid/
+-->
+<link rel="import" href="../../polymer/polymer.html">
+
+<polymer-element name="bin-packing-grid" attributes="cellSize gutterSize">
+  <template>
+    <style>
+      :host {
+        display   : block;
+        height    : 100%;
+        position  : relative;
+        width     : auto;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script src="bin-packing-grid.js"></script>
+</polymer-element>
+<polymer-element name="bin-packing-item" attributes="top left cols rows">
+  <template>
+    <style>
+      :host {
+        display   : block;
+        position  : absolute;
+        left      : 0;
+        top       : 0;
+        height    : 100px;
+        width     : 100px;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    Polymer('bin-packing-item', {
+      top : 50,
+      left : 50,
+
+      topChanged : function (oldVal, newVal) {
+        this.style.top = newVal + "px";
+      },
+      leftChanged : function (oldVal, newVal) {
+        this.style.left = newVal + "px";
+      }
+    });
+  </script>
+    
+</polymer-element>

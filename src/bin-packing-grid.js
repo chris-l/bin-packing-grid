@@ -7,11 +7,25 @@
   forEach = Function.prototype.call.bind(Array.prototype.forEach);
   map = Function.prototype.call.bind(Array.prototype.map);
 
+
+  /**
+   * Return the style of an element.
+   *
+   * @param {object} element The element to check the style
+   * @param {string} name The name of the style to check
+   */
   function getStyle(element, name) {
     return document.defaultView.getComputedStyle(element, null)
       .getPropertyValue(name);
   }
 
+
+  /**
+   * Clone a grid. A grid is an array of arrays, and each element of those
+   * arrays contains either a 1 or a 0.
+   *
+   * @param {array} grid The grid
+   */
   function cloneGrid(grid) {
     return grid.map(function (row) {
       return row.slice(0);
@@ -23,6 +37,13 @@
    * Try to put an element into the grid.
    * Return a clone of the grid with the element if it is successful.
    * Return false otherwise.
+   *
+   * @param {array} grid The grid
+   * @param {number} x The x offset
+   * @param {number} y The y offset
+   * @param {number} rows Number of rows the element has
+   * @param {number} cols Number of columns the element has
+   * @param {number} count Number of columns the grid has
    */
   function putElement(grid, x, y, rows, cols, count) {
     var col, row;
@@ -47,6 +68,12 @@
   }
 
 
+  /**
+   * Do the actual packaging of elements
+   *
+   * @param {array} list Array with the elements
+   * @param {object} that The bin-packing-grid element
+   */
   function packageElements(list, that) {
     var elements, grid;
 
@@ -93,6 +120,12 @@
     });
   }
 
+  /**
+   * This is where the actual action begins.
+   * Here the container is resized and the max number of columns is determined.
+   * Then the function to package the elements is called.
+   * @param {object} element The bin-packing-grid element.
+   */
   function resizeContainer(element) {
     var width;
 

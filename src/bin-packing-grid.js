@@ -2,7 +2,7 @@
 /*global window, document, Polymer*/
 (function () {
   'use strict';
-  var forEach, map, createRow;
+  var forEach, map, createRow, resizer;
 
   forEach = Function.prototype.call.bind(Array.prototype.forEach);
   map = Function.prototype.call.bind(Array.prototype.map);
@@ -94,7 +94,7 @@
     */
 
     elements.forEach(function (item) {
-      var y, x, result, len;
+      var y, x, result, len, matches = [], match, next;
 
       for (y = 0; y < grid.length; y += 1) {
         for (x = 0; x < that.columns; x += 1) {
@@ -104,13 +104,42 @@
 
             // It was inserted
             if (result !== false) {
-              grid = result;
-              item.item.left = (that.cellSize + that.gutterSize) * x;
-              item.item.top = (that.cellSize + that.gutterSize) * y;
-              return;
+              // Next block of used space in this row.
+              next = grid[y].indexOf(1, x);
+
+              matches.push({
+                grid : result,
+                left : grid[y].slice(x, next),
+                y : y,
+                x : x
+              });
+
+              break;
             }
           }
         }
+      }
+      if (matches.length > 0) {
+        matches.sort(function (a, b) {
+          if (a.x > b.x) {
+            return -1;
+          }
+          if (a.x < b.x) {
+            return 1;
+          }
+          if (a.y < b.y) {
+            return -1;
+          }
+          if (a.y > b.y) {
+            return 1;
+          }
+          return 0;
+        });
+        match = matches.shift();
+        item.item.left = (that.cellSize + that.gutterSize) * match.x;
+        item.item.top = (that.cellSize + that.gutterSize) * match.y;
+        grid = match.grid;
+        return;
       }
       len = grid.length;
       result = putElement(grid, 0, grid.length, item.rows, item.cols, that.columns);
@@ -152,7 +181,7 @@
       this.elements = this.elements || [];
     },
 
-    ready : function () {
+    init : function () {
       var items, that = this;
 
       items = this.getElementsByTagName('bin-packing-item');
@@ -177,8 +206,16 @@
         item.style.height = (item.rows * size - that.gutterSize) + "px";
       });
 
-      resizeContainer(that);
-      window.addEventListener('resize', resizeContainer.bind(0, that));
+      if (resizer) {
+        window.removeEventListener('resize', resizer);
+      }
+      resizer = resizeContainer.bind(0, that);
+      window.addEventListener('resize', resizer);
+      resizer();
+    },
+
+    ready : function () {
+      this.init();
     }
   });
 }());

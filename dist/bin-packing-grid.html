@@ -6,7 +6,7 @@
 -->
 <link rel="import" href="../../polymer/polymer.html">
 
-<polymer-element name="bin-packing-grid" attributes="cellSize gutterSize">
+<polymer-element name="bin-packing-grid" attributes="cellSize gutterSize init">
   <template>
     <style>
       :host {
@@ -36,6 +36,8 @@
   </template>
   <script>
     Polymer('bin-packing-item', {
+      rows : 1,
+      cols : 1,
       top : 50,
       left : 50,
 

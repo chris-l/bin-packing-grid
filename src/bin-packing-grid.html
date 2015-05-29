@@ -6,48 +6,61 @@
 -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<polymer-element name="bin-packing-grid" attributes="cellSize gutterSize init">
+<dom-module id="bin-packing-grid">
+  <style>
+    :host {
+      display   : block;
+      position  : relative;
+    }
+    :host ::content > bin-packing-item {
+      display   : block;
+      position  : absolute;
+    }
+  </style>
   <template>
-    <style>
-      :host {
-        display   : block;
-        height    : 100%;
-        position  : relative;
-        width     : auto;
-      }
-    </style>
     <content></content>
   </template>
   <script src="bin-packing-grid.js"></script>
-</polymer-element>
-<polymer-element name="bin-packing-item" attributes="top left cols rows">
+</dom-module
+<dom-module id="bin-packing-item">
   <template>
-    <style>
-      :host {
-        display   : block;
-        position  : absolute;
-        left      : 0;
-        top       : 0;
-        height    : 100px;
-        width     : 100px;
-      }
-    </style>
     <content></content>
   </template>
   <script>
-    Polymer('bin-packing-item', {
-      rows : 1,
-      cols : 1,
-      top : 50,
-      left : 50,
+    Polymer({
+      is : 'bin-packing-item',
 
-      topChanged : function (oldVal, newVal) {
+      properties: {
+        top : {
+          type : Number,
+          observer: 'topChanged',
+          value : 0
+        },
+        left : {
+          type : Number,
+          observer: 'leftChanged',
+          value : 0
+        },
+        cols : {
+          type : Number,
+          observer: 'ready',
+          value : 1
+        },
+        rows : {
+          type : Number,
+          observer: 'ready',
+          value : 1
+        }
+      },
+
+      topChanged : function (newValue) {
         this.style.top = newVal + "px";
       },
-      leftChanged : function (oldVal, newVal) {
+
+      leftChanged : function (newVal) {
         this.style.left = newVal + "px";
       }
     });
   </script>
     
-</polymer-element>
+</dom-module>

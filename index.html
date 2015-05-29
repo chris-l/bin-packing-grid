@@ -18,19 +18,21 @@
   </head>
   <body>
 
-    <polymer-element name="demo-page" noscript>
+    <dom-module id="demo-page">
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+        bin-packing-grid {
+          margin: auto;
+        }
+        bin-packing-item {
+          background-color: #84A4A8;
+          font-weight: 400;
+          font-size: 18px;
+          padding: 15px;
+          color: white;
+        }
+      </style>
       <template>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-          bin-packing-grid {
-            margin: auto;
-          }
-          bin-packing-item {
-            background-color: #777;
-            padding: 15px;
-            color: white;
-          }
-        </style>
         <!-- Using Custom Elements -->
         <div class="container-fluid">
           <h1>grid demo</h1>
@@ -82,8 +84,14 @@
           </bin-packing-grid>
         </div>
       </template>
-    </polymer-element>
-    <div class="container">
+      <script>
+        Polymer({
+          is : 'demo-page'
+        });
+      </script>
+    </dom-module>
+    <div class="container-fluid">
+      <h1>grid demo</h1>
       <demo-page></demo-page>
     </div>
   </body>

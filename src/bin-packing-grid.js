@@ -174,9 +174,20 @@
     });
   }
 
-  Polymer('bin-packing-grid', {
-    cellSize : 100,
-    gutterSize : 5,
+  Polymer({
+    is : 'bin-packing-grid',
+
+    properties: {
+      cellSize : {
+        type : Number,
+        value : 100
+      },
+      gutterSize : {
+        type : Number,
+        value : 5
+      }
+    },
+
     created : function () {
       this.elements = this.elements || [];
     },
@@ -184,12 +195,12 @@
     init : function () {
       var items, that = this;
 
-      items = this.getElementsByTagName('bin-packing-item');
+      items = Polymer.dom(this).querySelectorAll('bin-packing-item');
       this.elements = map(items, function (item) {
         var cols, rows;
 
-        cols = parseInt(item.cols, 10);
-        rows = parseInt(item.rows, 10);
+        cols = parseInt(item.getAttribute('cols'), 10);
+        rows = parseInt(item.getAttribute('rows'), 10);
 
         return {
           area : cols * rows,

@@ -53,12 +53,32 @@
         }
       },
 
-      topChanged : function (newValue) {
-        this.style.top = newVal + "px";
+      topChanged : function (y) {
+        var parent, size;
+
+        parent = Polymer.dom(this).parentNode;
+        size = parent.cellSize + parent.gutterSize;
+
+        this.style.top = (size * y) + 'px';
       },
 
-      leftChanged : function (newVal) {
-        this.style.left = newVal + "px";
+      leftChanged : function (x) {
+        var parent, size;
+
+        parent = Polymer.dom(this).parentNode;
+        size = parent.cellSize + parent.gutterSize;
+
+        this.style.left = (size * x) + 'px';
+      },
+
+      ready : function () {
+        var parent, size;
+
+        parent = Polymer.dom(this).parentNode;
+        size = parent.cellSize + parent.gutterSize;
+
+        this.style.width = (this.cols * size - parent.gutterSize) + "px";
+        this.style.height = (this.rows * size - parent.gutterSize) + "px";
       }
     });
   </script>

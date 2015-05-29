@@ -2,9 +2,8 @@
 /*global window, document, Polymer*/
 (function () {
   'use strict';
-  var forEach, map, createRow, resizer;
+  var map, createRow, resizer;
 
-  forEach = Function.prototype.call.bind(Array.prototype.forEach);
   map = Function.prototype.call.bind(Array.prototype.map);
 
 
@@ -136,16 +135,16 @@
           return 0;
         });
         match = matches.shift();
-        item.item.left = (that.cellSize + that.gutterSize) * match.x;
-        item.item.top = (that.cellSize + that.gutterSize) * match.y;
+        item.item.setAttribute('top', match.y);
+        item.item.setAttribute('left', match.x);
         grid = match.grid;
         return;
       }
       len = grid.length;
       result = putElement(grid, 0, grid.length, item.rows, item.cols, that.columns);
       grid = result;
-      item.item.top = (that.cellSize + that.gutterSize) * len;
-      item.item.left = 0;
+      item.item.setAttribute('top', len);
+      item.item.setAttribute('left', 0);
     });
   }
 
@@ -208,13 +207,6 @@
           rows : rows,
           item : item
         };
-      });
-
-      forEach(items, function (item) {
-        var size = that.cellSize + that.gutterSize;
-
-        item.style.width = (item.cols * size - that.gutterSize) + "px";
-        item.style.height = (item.rows * size - that.gutterSize) + "px";
       });
 
       if (resizer) {

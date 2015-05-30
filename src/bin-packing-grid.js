@@ -120,16 +120,22 @@
       }
       if (matches.length > 0) {
         matches.sort(function (a, b) {
-          if (a.x > b.x) {
+          if (a.grid.length < b.grid.length) {
             return -1;
           }
-          if (a.x < b.x) {
+          if (a.grid.length > b.grid.length) {
             return 1;
           }
           if (a.y < b.y) {
             return -1;
           }
           if (a.y > b.y) {
+            return 1;
+          }
+          if (a.x > b.x) {
+            return -1;
+          }
+          if (a.x < b.x) {
             return 1;
           }
           return 0;

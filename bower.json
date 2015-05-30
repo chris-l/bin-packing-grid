@@ -1,7 +1,7 @@
 {
   "name": "bin-packing-grid",
   "version": "0.1.0",
-  "description": "Fit elements into a grid using a bin-packing algorithm",
+  "description": "Polymer element that fit elements into a grid using a bin-packing algorithm.",
   "license": "MIT",
   "main": "dist/bin-packing-grid.html",
   "keywords": [
@@ -9,6 +9,7 @@
     "bin-packing",
     "bin",
     "packing",
+    "binpacking",
     "masonry",
     "polymer",
     "web-components"

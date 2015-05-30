@@ -1,6 +1,6 @@
 # &lt;bin-packing-grid&gt;
 
-Fit elements into a grid using a bin-packing algorithm.
+Polymer element that fit elements into a grid using a bin-packing algorithm.
 
 ## Demo
 
@@ -33,7 +33,7 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
 3. Start using it!
 
     ```html
-    <bin-packing-grid cellsize="150">
+    <bin-packing-grid cell-size="150">
       <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
       <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
       <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
@@ -46,15 +46,15 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
 
 Attribute     | Options     | Default      | Description
 ---           | ---         | ---          | ---
-`cellsize`    | *number*    | `100`        | Size in pixels for each cell
+`cellSize`    | *number*    | `100`        | Size in pixels for each cell
 `gutterSize`  | *number*    | `5`          | Size in pixels for the space used to separate elements
 
 ### For &lt;bin-packing-item&gt;:
 
 Attribute     | Options     | Default      | Description
 ---           | ---         | ---          | ---
-`rows`        | *number*    | `1`          | How many cells is vertically
-`cols`        | *number*    | `1`          | How many cells is horizontally
+`rows`        | *number*    | `1`          | Height of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
+`cols`        | *number*    | `1`          | Width of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 
 ## Contributing
 

@@ -12,9 +12,13 @@
       display   : block;
       position  : relative;
     }
-    :host ::content > bin-packing-item {
+    :host ::content > bin-packing-item, :host .bin-packing-filler {
       display   : block;
       position  : absolute;
+      box-sizing: border-box;
+    }
+    :host .bin-packing-filler {
+      z-index   : -100;
     }
   </style>
   <template>

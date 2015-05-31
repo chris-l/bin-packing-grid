@@ -2,6 +2,8 @@
 
 Polymer element that fit elements into a grid using a bin-packing algorithm.
 
+It will try to fill all the gaps, but in case there are gaps left, it will create div elements to fill them.
+
 ## Demo
 
 [Check it live!](http://chris-l.github.io/bin-packing-grid)

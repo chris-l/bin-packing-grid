@@ -9,8 +9,12 @@
       && 'createShadowRoot' in HTMLElement.prototype
       && 'import' in document.createElement('link')
       && 'content' in document.createElement('template'))) {
-            document.write('<script src="/bower_components/webcomponentsjs/webcomponents.min.js"><\/script>');
+            document.write('<script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"><\/script>');
       }</script>
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
     <link rel="import" href="bower_components/polymer/polymer.html">
 
     <!-- Importing Custom Elements -->
@@ -30,6 +34,9 @@
           font-size: 18px;
           padding: 15px;
           color: white;
+        }
+        bin-packing-grid::shadow .bin-packing-filler {
+          background-color: #84A4A8;
         }
       </style>
       <template>

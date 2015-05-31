@@ -68,6 +68,50 @@
 
 
   /**
+   * Return the style of an element.
+   *
+   * @param {array} grid The grid
+   * @param {object} that The bin-packing-grid element
+   */
+  function addFiller(grid, that) {
+
+    function createFiller(y, x) {
+      var element = document.createElement('div');
+      Polymer.dom(that.root).appendChild(element);
+      element.style.width = that.cellSize + 'px';
+      element.style.height = that.cellSize + 'px';
+      element.style.top = ((that.cellSize + that.gutterSize) * y) + 'px';
+      element.style.left = ((that.cellSize + that.gutterSize) * x) + 'px';
+      element.className = 'bin-packing-filler';
+    }
+
+    // Remove any filler elements
+    Polymer.dom(that.root).querySelectorAll('.bin-packing-filler').forEach(function (item) {
+      Polymer.dom(that.root).removeChild(item);
+    });
+
+
+    var y, x, clone;
+    clone = cloneGrid(grid);
+    clone.reverse();
+
+    for (y = 0; y < clone.length; y += 1) {
+      for (x = 0; x < that.columns; x += 1) {
+        if (clone[y][x] === 0) {
+          if (y === 0) {
+            clone[y][x] = false;
+          } else if (clone[y - 1][x] === false) {
+            clone[y][x] = false;
+          } else {
+            createFiller(grid.length - y - 1, x);
+          }
+        }
+      }
+    }
+  }
+
+
+  /**
    * Do the actual packaging of elements
    *
    * @param {array} list Array with the elements
@@ -152,6 +196,7 @@
       item.item.setAttribute('top', len);
       item.item.setAttribute('left', 0);
     });
+    addFiller(grid, that);
   }
 
   /**

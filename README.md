@@ -1,8 +1,12 @@
 # &lt;bin-packing-grid&gt;
 
-Polymer element that fit elements into a grid using a bin-packing algorithm.
+This is a Polymer element that fit elements into a grid using a bin-packing algorithm. The result is similar to the grid used on pinterest and other sites.
 
-It will try to fill all the gaps, but in case there are gaps left, it will create div elements to fill them.
+It will try to fit everything and leave no spaces, but in case there are gaps left, it will create **div** elements to fill them.
+
+Also, this element is responsive.
+
+It uses Polymer 1.0 and it doesn't require jquery or any other library - no dependencies except Polymer itself.
 
 ## Demo
 
@@ -41,6 +45,18 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
       <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
     </bin-packing-grid>
     ```
+
+    The `<bin-packing-item>` elements don't have colours, backgrounds, borders or any visual style. The only style properties added are the ones required to resize and positionate the element into the grid.
+    Is up to the developer to add any other desired style. By using the **transition** css property, is possible to animate the movement of elements.
+
+    To fill the gaps, `<div>` elements with the **bin-packing-filler** class will be created. Those elements are created into the shadow dom. You can target that element for styling with a rule like this:
+
+    ```css
+    bin-packing-grid::shadow .bin-packing-filler {
+      background-color: blue;
+    }
+    ```
+
 
 ## Options
 

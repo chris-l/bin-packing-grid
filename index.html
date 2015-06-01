@@ -34,6 +34,8 @@
           font-weight: 400;
           font-size: 18px;
           padding: 15px;
+          transition-property: left, top;
+          transition-duration: 700ms;
           color: white;
         }
         bin-packing-grid::shadow .bin-packing-filler {
@@ -44,6 +46,10 @@
         <!-- Using Custom Elements -->
         <div class="container-fluid">
           <h1>&lt;bin-packing-grid&gt; demo</h1>
+          <p>The grid is responsive.</p>
+          <p>Also, this demo uses a very simple CSS style using <b>transitions</b> to animate the movement of elements. Try to resize the window!</p>
+          <p>By the way, don't worry, using or not animations is completly up to you, <b>and by default it does not include any animation.</b></p>
+
           <bin-packing-grid cell-size="150">
             <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
             <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
@@ -78,6 +84,19 @@
             <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
             <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
             <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="3" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
+            <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+            <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
             <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
             <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
             <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>

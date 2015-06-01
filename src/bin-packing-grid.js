@@ -192,6 +192,9 @@
       }
       len = grid.length;
       result = putElement(grid, 0, grid.length, item.rows, item.cols, that.columns);
+      if (result === false) {
+        throw new Error('The element does not fit!');
+      }
       grid = result;
       item.item.setAttribute('top', len);
       item.item.setAttribute('left', 0);
@@ -212,7 +215,18 @@
     window.requestAnimationFrame(function () {
 
       width = parseInt(getStyle(element, 'width'), 10);
-      element.columns = Math.floor(width / (element.cellSize + element.gutterSize));
+
+      element.columns = (function () {
+        var cols, widest;
+
+        cols = Math.floor(width / (element.cellSize + element.gutterSize));
+        widest = element.elements.slice(0).sort(function (a, b) {
+          return a.rows > b.rows;
+        }).pop().rows;
+        // The minimal width of the grid is the width of the widest element.
+        return cols < widest ? widest : cols;
+      }());
+
       createRow = function () {
         return Array.apply(0, Array.call(0, element.columns))
           .map(function () {

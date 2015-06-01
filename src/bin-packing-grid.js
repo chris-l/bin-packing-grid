@@ -200,6 +200,9 @@
       item.item.setAttribute('left', 0);
     });
     addFiller(grid, that);
+
+    // Set the height of the grid.
+    that.style.height = (grid.length * (that.cellSize + that.gutterSize)) + 'px';
   }
 
   /**

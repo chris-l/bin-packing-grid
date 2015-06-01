@@ -1,0 +1,90 @@
+<!--
+  <bin-packing-grid>
+
+  @element bin-packing-grid
+  @demo https://chris-l.github.io/bin-packing-grid/
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="bin-packing-grid">
+  <style>
+    :host {
+      display   : block;
+      position  : relative;
+    }
+    :host ::content > bin-packing-item, :host .bin-packing-filler {
+      display   : block;
+      position  : absolute;
+      box-sizing: border-box;
+    }
+    :host .bin-packing-filler {
+      z-index   : -100;
+    }
+  </style>
+  <template>
+    <content></content>
+  </template>
+  <script src="bin-packing-grid.js"></script>
+</dom-module
+<dom-module id="bin-packing-item">
+  <template>
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+      is : 'bin-packing-item',
+
+      properties: {
+        top : {
+          type : Number,
+          observer: 'topChanged',
+          value : 0
+        },
+        left : {
+          type : Number,
+          observer: 'leftChanged',
+          value : 0
+        },
+        cols : {
+          type : Number,
+          observer: 'ready',
+          value : 1
+        },
+        rows : {
+          type : Number,
+          observer: 'ready',
+          value : 1
+        }
+      },
+
+      topChanged : function (y) {
+        var parent, size;
+
+        parent = Polymer.dom(this).parentNode;
+        size = parent.cellSize + parent.gutterSize;
+
+        this.style.top = (size * y) + 'px';
+      },
+
+      leftChanged : function (x) {
+        var parent, size;
+
+        parent = Polymer.dom(this).parentNode;
+        size = parent.cellSize + parent.gutterSize;
+
+        this.style.left = (size * x) + 'px';
+      },
+
+      ready : function () {
+        var parent, size;
+
+        parent = Polymer.dom(this).parentNode;
+        size = parent.cellSize + parent.gutterSize;
+
+        this.style.width = (this.cols * size - parent.gutterSize) + "px";
+        this.style.height = (this.rows * size - parent.gutterSize) + "px";
+      }
+    });
+  </script>
+    
+</dom-module>

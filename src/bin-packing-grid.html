@@ -12,7 +12,7 @@
       display   : block;
       position  : relative;
     }
-    :host ::content > bin-packing-item, :host .bin-packing-filler {
+    :host ::content > bin-packing-item, :host > .bin-packing-filler, :host ::content > .bin-packing-filler {
       display   : block;
       position  : absolute;
       box-sizing: border-box;
@@ -25,7 +25,7 @@
     <content></content>
   </template>
   <script src="bin-packing-grid.js"></script>
-</dom-module
+</dom-module>
 <dom-module id="bin-packing-item">
   <template>
     <content></content>
@@ -76,13 +76,20 @@
       },
 
       ready : function () {
-        var parent, size;
+        var parent, size, interval, that;
 
+        that = this;
         parent = Polymer.dom(this).parentNode;
-        size = parent.cellSize + parent.gutterSize;
+        interval = setInterval(function () {
+          if (!parent.cellSize) {
+            return;
+          }
+          clearInterval(interval);
+          size = parent.cellSize + parent.gutterSize;
 
-        this.style.width = (this.cols * size - parent.gutterSize) + "px";
-        this.style.height = (this.rows * size - parent.gutterSize) + "px";
+          that.style.width = (that.cols * size - parent.gutterSize) + "px";
+          that.style.height = (that.rows * size - parent.gutterSize) + "px";
+        }, 1);
       }
     });
   </script>

@@ -4,9 +4,15 @@ This is a Polymer element that fit elements into a grid using a bin-packing algo
 
 It will try to fit everything and leave no spaces, but in case there are gaps left, it will create **div** elements to fill them.
 
+And just for the record, the size of the elements are never changed at all; the elements are only reordered.
+
 Also, this element is responsive.
 
 It uses Polymer 1.0 and it doesn't require jquery or any other library - no dependencies except Polymer itself.
+
+## Algorithm
+
+This uses a variation of the best-fit algorithm; it tries to fit each element and check the possible positions but it first gives priority to the one that keeps the height of the grid smaller.
 
 ## Demo
 
@@ -46,7 +52,11 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
     </bin-packing-grid>
     ```
 
-    The `<bin-packing-item>` elements don't have colours, backgrounds, borders or any visual style. The only style properties added are the ones required to resize and positionate the element into the grid.
+    The `<bin-packing-grid>` creates a grid formed by squares, which each side has the measure of `cell-size` in pixels (default 100). Each one of those squares is separated by a gutter determined by `gutter-size` also in pixels (default 5).
+
+    The size of each `<bin-packing-item>` element is determined by the amount of `rows` (number of squares, plus gutter space, vertically) and `cols` (number of squares, plus gutter space, horizontally)
+
+    The `<bin-packing-item>` elements don't have colours, backgrounds, borders or any visual style by default. The only style properties added are the ones required to resize and positionate the element into the grid.
     Is up to the developer to add any other desired style. By using the **transition** css property, is possible to animate the movement of elements.
 
     To fill the gaps, `<div>` elements with the **bin-packing-filler** class will be created. Those elements are created into the shadow dom. You can target that element for styling with a rule like this:

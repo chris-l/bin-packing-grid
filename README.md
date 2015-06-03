@@ -54,20 +54,20 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
 
 ## How it works
 
-    The `<bin-packing-grid>` creates a grid formed by squares, which each side has the measure of `cell-size` in pixels (default 100). Each one of those squares is separated by a gutter determined by `gutter-size` also in pixels (default 5).
+The `<bin-packing-grid>` creates a grid formed by squares, which each side has the measure of `cell-size` in pixels (default 100). Each one of those squares is separated by a gutter determined by `gutter-size` also in pixels (default 5).
 
-    The size of each `<bin-packing-item>` element is determined by the amount of `rows` (number of squares, plus gutter space, vertically) and `cols` (number of squares, plus gutter space, horizontally)
+The size of each `<bin-packing-item>` element is determined by the amount of `rows` (number of squares, plus gutter space, vertically) and `cols` (number of squares, plus gutter space, horizontally)
 
-    The `<bin-packing-item>` elements don't have colours, backgrounds, borders or any visual style by default. The only style properties added are the ones required to resize and positionate the element into the grid.
-    Is up to the developer to add any other desired style. By using the **transition** css property, is possible to animate the movement of elements.
+The `<bin-packing-item>` elements don't have colours, backgrounds, borders or any visual style by default. The only style properties added are the ones required to resize and positionate the element into the grid.
+Is up to the developer to add any other desired style. By using the **transition** css property, is possible to animate the movement of elements.
 
-    To fill the gaps, `<div>` elements with the **bin-packing-filler** class will be created. Those elements are created into the shadow dom. You can target that element for styling with a rule like this:
+To fill the gaps, `<div>` elements with the **bin-packing-filler** class will be created. Those elements are created into the shadow dom. You can target that element for styling with a rule like this:
 
-    ```css
-    bin-packing-grid::shadow .bin-packing-filler {
-      background-color: blue;
-    }
-    ```
+```css
+bin-packing-grid::shadow .bin-packing-filler {
+  background-color: blue;
+}
+```
 
 
 ## Options

@@ -52,6 +52,8 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
     </bin-packing-grid>
     ```
 
+## How it works
+
     The `<bin-packing-grid>` creates a grid formed by squares, which each side has the measure of `cell-size` in pixels (default 100). Each one of those squares is separated by a gutter determined by `gutter-size` also in pixels (default 5).
 
     The size of each `<bin-packing-item>` element is determined by the amount of `rows` (number of squares, plus gutter space, vertically) and `cols` (number of squares, plus gutter space, horizontally)

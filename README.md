@@ -10,6 +10,15 @@ Also, this element is responsive.
 
 It uses Polymer 1.0 and it doesn't require jquery or any other library - no dependencies except Polymer itself.
 
+## Changelog
+
+* 0.1.2
+ - Now is possible to create dynamically `<bin-packing-item>` elements and call the `reflow` method on the grid element to repackage and reorder the grid.
+* 0.1.1
+ - Bug fixes
+* 0.1.0
+ - First version
+
 ## Algorithm
 
 This uses a variation of the best-fit algorithm; it tries to fit each element and check the possible positions but it first gives priority to the one that keeps the height of the grid smaller.
@@ -69,6 +78,21 @@ bin-packing-grid::shadow .bin-packing-filler {
 }
 ```
 
+### Dynamically create elements
+
+Just create a `<bin-packing-item>` element, attach it to the grid, and call `reflow`.
+
+```javascript
+var item, grid;
+
+grid = document.getElementsByTagName('bin-packing-grid')[0];
+
+item = document.createElement('bin-packing-item');
+item.rows = 3;
+item.cols = 3;
+Polymer.dom(grid).appendChild(item); // is important to use Polymer.dom()
+grid.reflow();
+```
 
 ## Options
 

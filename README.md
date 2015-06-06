@@ -13,7 +13,7 @@ It uses Polymer 1.0 and it doesn't require jquery or any other library - no depe
 ## Changelog
 
 * 0.1.2
- - Now is possible to create dynamically `<bin-packing-item>` elements and call the `reflow` method on the grid element to repackage and reorder the grid.
+ - Now is possible to [create dynamically `<bin-packing-item>` elements](#dynamically-create-elements) and call the `reflow` method on the grid element to repackage and reorder the grid.
 * 0.1.1
  - Bug fixes
 * 0.1.0

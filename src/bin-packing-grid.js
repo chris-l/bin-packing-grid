@@ -1,5 +1,5 @@
 /*jslint indent: 2, newcap: true */
-/*global window, document, Polymer*/
+/*global window, document, Polymer, setInterval, clearInterval*/
 (function () {
   'use strict';
   var map, createRow, resizer;
@@ -241,6 +241,9 @@
     });
   }
 
+  /**
+   * bin-packing-grid
+   */
   Polymer({
     is : 'bin-packing-grid',
 
@@ -287,6 +290,71 @@
 
     ready : function () {
       this.init();
+    }
+  });
+
+  /**
+   * bin-packing-item
+   */
+  Polymer({
+    is : 'bin-packing-item',
+
+    properties: {
+      top : {
+        type : Number,
+        observer: 'topChanged',
+        value : 0
+      },
+      left : {
+        type : Number,
+        observer: 'leftChanged',
+        value : 0
+      },
+      cols : {
+        type : Number,
+        observer: 'ready',
+        value : 1
+      },
+      rows : {
+        type : Number,
+        observer: 'ready',
+        value : 1
+      }
+    },
+
+    topChanged : function (y) {
+      var parent, size;
+
+      parent = Polymer.dom(this).parentNode;
+      size = parent.cellSize + parent.gutterSize;
+
+      this.style.top = (size * y) + 'px';
+    },
+
+    leftChanged : function (x) {
+      var parent, size;
+
+      parent = Polymer.dom(this).parentNode;
+      size = parent.cellSize + parent.gutterSize;
+
+      this.style.left = (size * x) + 'px';
+    },
+
+    ready : function () {
+      var parent, size, interval, that;
+
+      that = this;
+      parent = Polymer.dom(this).parentNode;
+      interval = setInterval(function () {
+        if (!parent.cellSize) {
+          return;
+        }
+        clearInterval(interval);
+        size = parent.cellSize + parent.gutterSize;
+
+        that.style.width = (that.cols * size - parent.gutterSize) + "px";
+        that.style.height = (that.rows * size - parent.gutterSize) + "px";
+      }, 1);
     }
   });
 }());

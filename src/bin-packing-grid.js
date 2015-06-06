@@ -1,5 +1,5 @@
 /*jslint indent: 2, newcap: true */
-/*global window, document, Polymer*/
+/*global window, document, Polymer, setInterval, clearInterval*/
 (function () {
   'use strict';
   var map, createRow, resizer;
@@ -241,6 +241,9 @@
     });
   }
 
+  /**
+   * bin-packing-grid
+   */
   Polymer({
     is : 'bin-packing-grid',
 
@@ -259,15 +262,27 @@
       this.elements = this.elements || [];
     },
 
-    init : function () {
+
+    /**
+     * Reflow the grid. (Re)create the "elements" property and resize it.
+     * Call this function if you dinamically add <bin-packing-item> elements
+     * to the grid.
+     */
+    reflow : function () {
       var items, that = this;
 
       items = Polymer.dom(this).querySelectorAll('bin-packing-item');
+      items.forEach(function (item) {
+        item.gutterSize = that.gutterSize;
+        item.baseSize = that.cellSize + that.gutterSize;
+      });
       this.elements = map(items, function (item) {
         var cols, rows;
 
-        cols = parseInt(item.getAttribute('cols'), 10);
-        rows = parseInt(item.getAttribute('rows'), 10);
+        cols = typeof item.cols === 'number' ? item.cols :
+            parseInt(item.getAttribute('cols'), 10) || 0;
+        rows = typeof item.rows === 'number' ? item.rows :
+            parseInt(item.getAttribute('rows'), 10) || 0;
 
         return {
           area : cols * rows,
@@ -286,7 +301,72 @@
     },
 
     ready : function () {
-      this.init();
+      this.reflow();
+    }
+  });
+
+  /**
+   * bin-packing-item
+   */
+  Polymer({
+    is : 'bin-packing-item',
+
+    properties: {
+      top : {
+        type : Number,
+        observer: 'change',
+        value : 0
+      },
+      left : {
+        type : Number,
+        observer: 'change',
+        value : 0
+      },
+      cols : {
+        type : Number,
+        observer: 'change',
+        value : 1
+      },
+      rows : {
+        type : Number,
+        observer: 'change',
+        value : 1
+      },
+      baseSize : {
+        type : Number,
+        observer: 'change',
+        value : 0
+      },
+      gutterSize : {
+        type : Number,
+        observer: 'change',
+        value : 0
+      }
+    },
+
+    change : function () {
+      this.style.top = (this.baseSize * this.top) + 'px';
+      this.style.left = (this.baseSize * this.left) + 'px';
+      this.style.width = (this.cols * this.baseSize - this.gutterSize) + "px";
+      this.style.height = (this.rows * this.baseSize - this.gutterSize) + "px";
+    },
+
+    ready : function () {
+      var parent, interval, that;
+
+      that = this;
+      parent = Polymer.dom(this).parentNode;
+      if (parent === null) {
+        return;
+      }
+      interval = setInterval(function () {
+        if (!parent.cellSize) {
+          return;
+        }
+        clearInterval(interval);
+        that.gutterSize = parent.gutterSize;
+        that.baseSize = parent.cellSize + parent.gutterSize;
+      }, 1);
     }
   });
 }());

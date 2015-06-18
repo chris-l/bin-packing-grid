@@ -11,15 +11,10 @@
       && 'createShadowRoot' in HTMLElement.prototype
       && 'import' in document.createElement('link')
       && 'content' in document.createElement('template'))) {
-            document.write('<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"><\/script>');
+            document.write('<script src="bower_components/webcomponentsjs/webcomponents.min.js"><\/script>');
       }</script>
-    <script>
-      window.Polymer = window.Polymer || {};
-      window.Polymer.dom = 'shadow';
-    </script>
 
     <!-- Html imports -->
-    <link rel="import" href="bower_components/polymer/polymer.html">
     <link rel="import" href="src/bin-packing-grid.html">
     <style>
       html, body {
@@ -58,7 +53,6 @@
   </head>
   <body>
 
-  <template is="dom-bind">
     <div class="container-fluid">
       <h1>&lt;bin-packing-grid&gt; demo</h1>
       <p>The grid is responsive.</p>
@@ -125,6 +119,5 @@
         <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
       </bin-packing-grid>
     </div>
-  </template>
   </body>
 </html>

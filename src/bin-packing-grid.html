@@ -4,9 +4,7 @@
   @element bin-packing-grid
   @demo https://chris-l.github.io/bin-packing-grid/
 -->
-<link rel="import" href="../bower_components/polymer/polymer.html">
-
-<dom-module id="bin-packing-grid">
+<template id="bin-packing-grid">
   <style>
     :host {
       display   : block;
@@ -17,18 +15,8 @@
       position  : absolute;
       box-sizing: border-box;
     }
-    :host .bin-packing-filler {
-      z-index   : -100;
-    }
   </style>
-  <template>
-    <content></content>
-  </template>
-</dom-module>
-<dom-module id="bin-packing-item">
-  <template>
-    <content></content>
-  </template>
-</dom-module>
+  <content></content>
+</template>
 
 <script src="bin-packing-grid.js"></script>

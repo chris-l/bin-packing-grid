@@ -1,10 +1,100 @@
-/*jslint indent: 2, newcap: true */
-/*global window, document, Polymer, setInterval, clearInterval*/
+/*jslint indent: 2, regexp: true, nomen: true */
+/*global window, document, HTMLElement, setInterval, clearInterval*/
 (function () {
   'use strict';
-  var map, createRow, resizer;
+  var forEach, map, createRow, resizer, importDoc, gridPrototype,
+    itemPrototype, gridProperties, itemProperties;
 
+  importDoc = (document._currentScript || document.currentScript).ownerDocument;
   map = Function.prototype.call.bind(Array.prototype.map);
+  forEach = Function.prototype.call.bind(Array.prototype.forEach);
+
+
+  /**
+   * Create and add the shadow root to obj.root
+   * If necessary, it will rewrite the style and add it to the document head
+   *
+   * @param {object} obj The element to add the shadow root.
+   * @param {string} idTemplate The id of the template element.
+   * @param {string} [elementName] The name element, used for rewriting the css.
+   *                 If omited, it will use the idTemplate as name.
+   */
+  function addShadowRoot(obj, idTemplate, elementName) {
+    var template, styleStr, newStyle, hasStyle, dummy;
+
+    obj.root = obj.createShadowRoot();
+    template = importDoc.querySelector('#' + idTemplate);
+    obj.root.appendChild(template.content.cloneNode(true));
+
+    hasStyle = /<style(.|\n)*<\/style>/m;
+    if (window.ShadowDOMPolyfill && hasStyle.test(template.innerHTML)) {
+      dummy = document.createElement('head');
+      dummy.innerHTML = template.innerHTML;
+      styleStr = map(dummy.getElementsByTagName('style'), function (style) {
+        return style.innerHTML
+          .replace(/:host/gm, elementName || idTemplate).replace(/::content/gm, '')
+          .trim();
+      }).join("\n");
+      dummy = null;
+
+      newStyle = document.createElement('style');
+      newStyle.innerHTML = styleStr;
+      document.getElementsByTagName('head')[0].appendChild(newStyle);
+    }
+  }
+
+
+
+  /**
+   * Uses Object.defineProperty to add setters and getters
+   * to each property of the element.
+   *
+   * Each property is reflected to the equivalent DOM attribute
+   * @param {object} obj The element to add the shadow root.
+   * @param {object} props Object with the properties.
+   */
+  function prepareProperties(obj, props) {
+    function toHyphens(str) {
+      return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+    }
+    function convert(val, desc) {
+      if (desc.type === Number) {
+        return parseInt(val, 10);
+      }
+      if (desc.type === String) {
+        return String(val);
+      }
+      return val;
+    }
+    obj.props = {};
+
+    Object.keys(props).forEach(function (name) {
+      var attrName, desc, value;
+
+      desc = props[name];
+      attrName = toHyphens(name);
+      value = desc.value;
+      if (typeof value === 'function') {
+        value = value();
+      }
+
+      if (obj.getAttribute(attrName) === null) {
+        obj.setAttribute(attrName, obj.props[name] || value);
+      }
+      Object.defineProperty(obj, name, {
+        get : function () {
+          return convert(obj.getAttribute(attrName), desc) || obj.props[name] || value;
+        },
+        set : function (val) {
+          obj.props[name] = val;
+          obj.setAttribute(attrName, val);
+          if (typeof obj[desc.observer] === 'function') {
+            obj[desc.observer]();
+          }
+        }
+      });
+    });
+  }
 
 
   /**
@@ -77,7 +167,7 @@
 
     function createFiller(y, x) {
       var element = document.createElement('div');
-      Polymer.dom(that.root).appendChild(element);
+      that.root.appendChild(element);
       element.style.width = that.cellSize + 'px';
       element.style.height = that.cellSize + 'px';
       element.style.top = ((that.cellSize + that.gutterSize) * y) + 'px';
@@ -86,8 +176,8 @@
     }
 
     // Remove any filler elements
-    Polymer.dom(that.root).querySelectorAll('.bin-packing-filler').forEach(function (item) {
-      Polymer.dom(that.root).removeChild(item);
+    forEach(that.root.querySelectorAll('.bin-packing-filler'), function (item) {
+      that.root.removeChild(item);
     });
 
 
@@ -212,12 +302,17 @@
    * @param {object} element The bin-packing-grid element.
    */
   function resizeContainer(element) {
-    var width;
+    var width, inter;
 
     element.style.width = 'auto';
-    window.requestAnimationFrame(function () {
+    inter = setInterval(function () {
 
       width = parseInt(getStyle(element, 'width'), 10);
+
+      if (isNaN(width)) {
+        return;
+      }
+      clearInterval(inter);
 
       element.columns = (function () {
         var cols, widest;
@@ -238,135 +333,161 @@
       };
       element.style.width = (element.columns * (element.cellSize + element.gutterSize) - element.gutterSize) + 'px';
       packageElements(element.elements, element);
-    });
+    }, 1);
   }
 
   /**
    * bin-packing-grid
    */
-  Polymer({
-    is : 'bin-packing-grid',
+  gridPrototype = Object.create(HTMLElement.prototype);
 
-    properties: {
-      cellSize : {
-        type : Number,
-        value : 100
-      },
-      gutterSize : {
-        type : Number,
-        value : 5
-      }
+  gridProperties = {
+    cellSize : {
+      type : Number,
+      value : 100
     },
-
-    created : function () {
-      this.elements = this.elements || [];
-    },
-
-
-    /**
-     * Reflow the grid. (Re)create the "elements" property and resize it.
-     * Call this function if you dinamically add <bin-packing-item> elements
-     * to the grid.
-     */
-    reflow : function () {
-      var items, that = this;
-
-      items = Polymer.dom(this).querySelectorAll('bin-packing-item');
-      items.forEach(function (item) {
-        item.gutterSize = that.gutterSize;
-        item.baseSize = that.cellSize + that.gutterSize;
-      });
-      this.elements = map(items, function (item) {
-        var cols, rows;
-
-        cols = typeof item.cols === 'number' ? item.cols :
-            parseInt(item.getAttribute('cols'), 10) || 0;
-        rows = typeof item.rows === 'number' ? item.rows :
-            parseInt(item.getAttribute('rows'), 10) || 0;
-
-        return {
-          area : cols * rows,
-          cols : cols,
-          rows : rows,
-          item : item
-        };
-      });
-
-      if (resizer) {
-        window.removeEventListener('resize', resizer);
-      }
-      resizer = resizeContainer.bind(0, that);
-      window.addEventListener('resize', resizer);
-      resizer();
-    },
-
-    ready : function () {
-      this.reflow();
+    gutterSize : {
+      type : Number,
+      value : 5
     }
+  };
+
+  /**
+   * Reflow the grid. (Re)create the "elements" property and resize it.
+   * Call this function if you dinamically add <bin-packing-item> elements
+   * to the grid.
+   */
+  gridPrototype.reflow = function () {
+    var items, that = this;
+
+    items = this.querySelectorAll('bin-packing-item');
+    forEach(items, function (item) {
+      item.gutterSize = that.gutterSize;
+      item.baseSize = that.cellSize + that.gutterSize;
+    });
+    this.elements = map(items, function (item) {
+      var cols, rows;
+
+      cols = typeof item.cols === 'number' ? item.cols :
+          parseInt(item.getAttribute('cols'), 10) || 0;
+      rows = typeof item.rows === 'number' ? item.rows :
+          parseInt(item.getAttribute('rows'), 10) || 0;
+
+      return {
+        area : cols * rows,
+        cols : cols,
+        rows : rows,
+        item : item
+      };
+    });
+
+    if (resizer) {
+      window.removeEventListener('resize', resizer);
+    }
+    resizer = resizeContainer.bind(0, that);
+    window.addEventListener('resize', resizer);
+    resizer();
+  };
+
+  gridPrototype.createdCallback = function () {
+    addShadowRoot(this, 'bin-packing-grid');
+    prepareProperties(this, gridProperties);
+    this.elements = this.elements || [];
+    this.reflow();
+  };
+
+  document.registerElement('bin-packing-grid', {
+    prototype : gridPrototype
   });
 
   /**
    * bin-packing-item
    */
-  Polymer({
-    is : 'bin-packing-item',
+  itemPrototype = Object.create(HTMLElement.prototype);
 
-    properties: {
-      top : {
-        type : Number,
-        observer: 'change',
-        value : 0
-      },
-      left : {
-        type : Number,
-        observer: 'change',
-        value : 0
-      },
-      cols : {
-        type : Number,
-        observer: 'change',
-        value : 1
-      },
-      rows : {
-        type : Number,
-        observer: 'change',
-        value : 1
-      },
-      baseSize : {
-        type : Number,
-        observer: 'change',
-        value : 0
-      },
-      gutterSize : {
-        type : Number,
-        observer: 'change',
-        value : 0
+  itemProperties = {
+    top : {
+      type : Number,
+      observer : 'change',
+      value : 0
+    },
+    left : {
+      type : Number,
+      observer : 'change',
+      value : 0
+    },
+    cols : {
+      type : Number,
+      observer : 'change',
+      value : 1
+    },
+    rows : {
+      type : Number,
+      observer : 'change',
+      value : 1
+    },
+    baseSize : {
+      type : Number,
+      observer : 'change',
+      value : 0
+    },
+    gutterSize : {
+      type : Number,
+      observer : 'change',
+      value : 0
+    }
+  };
+
+  itemPrototype.change = function () {
+    this.style.top = (this.baseSize * this.top) + 'px';
+    this.style.left = (this.baseSize * this.left) + 'px';
+    this.style.width = (this.cols * this.baseSize - this.gutterSize) + "px";
+    this.style.height = (this.rows * this.baseSize - this.gutterSize) + "px";
+  };
+
+  /*jslint unparam:true*/
+  itemPrototype.attributeChangedCallback = (function () {
+    function toCamelCase(str) {
+      var parts, head;
+
+      parts = str.split('-');
+      head = parts.shift();
+
+      parts = parts.map(function (x) {
+        return x[0].toUpperCase() + x.slice(1);
+      }).join('');
+
+      return head + parts;
+    }
+    return function (attr, oldVal, newVal) {
+      if (itemProperties[attr]) {
+        this[toCamelCase(attr)] = newVal;
       }
-    },
+    };
+  }());
+  /*jslint unparam:false*/
 
-    change : function () {
-      this.style.top = (this.baseSize * this.top) + 'px';
-      this.style.left = (this.baseSize * this.left) + 'px';
-      this.style.width = (this.cols * this.baseSize - this.gutterSize) + "px";
-      this.style.height = (this.rows * this.baseSize - this.gutterSize) + "px";
-    },
+  itemPrototype.createdCallback = function () {
+    var parent, interval, that;
 
-    ready : function () {
-      var parent, interval, that;
-
-      that = this;
-      parent = Polymer.dom(this).parentNode;
-      if (parent === null) {
+    prepareProperties(this, itemProperties);
+    that = this;
+    parent = this.parentNode;
+    if (parent === null) {
+      return;
+    }
+    interval = setInterval(function () {
+      if (!parent.cellSize) {
         return;
       }
-      interval = setInterval(function () {
-        if (!parent.cellSize) {
-          return;
-        }
-        clearInterval(interval);
-        that.gutterSize = parent.gutterSize;
-        that.baseSize = parent.cellSize + parent.gutterSize;
-      }, 1);
-    }
+      clearInterval(interval);
+      that.gutterSize = parent.gutterSize;
+      that.baseSize = parent.cellSize + parent.gutterSize;
+    }, 1);
+  };
+
+  document.registerElement('bin-packing-item', {
+    prototype : itemPrototype
   });
+
 }());

@@ -1,6 +1,6 @@
 # &lt;bin-packing-grid&gt;
 
-This is a Polymer element that fit elements into a grid using a bin-packing algorithm. The result is similar to the grid used on pinterest and other sites.
+This is a custom element that fit elements into a grid using a bin-packing algorithm. The result is similar to the grid used on pinterest and other sites.
 
 It will try to fit everything and leave no spaces, but in case there are gaps left, it will create **div** elements to fill them.
 
@@ -8,10 +8,13 @@ And just for the record, the size of the elements are never changed at all; the 
 
 Also, this element is responsive.
 
-It uses Polymer 1.0 and it doesn't require jquery or any other library - no dependencies except Polymer itself.
+It is created using only vanilla js and it has no dependencies! (except, of course, the webcomponents.js polyfill)
 
 ## Changelog
 
+* 0.2.0
+ - Removed Polymer as dependency. Now is a vanilla js component!
+ - The dist file is vulcanized.
 * 0.1.2
  - Now is possible to [create dynamically `<bin-packing-item>` elements](#dynamically-create-elements) and call the `reflow` method on the grid element to repackage and reorder the grid.
 * 0.1.1
@@ -90,7 +93,7 @@ grid = document.getElementsByTagName('bin-packing-grid')[0];
 item = document.createElement('bin-packing-item');
 item.rows = 3;
 item.cols = 3;
-Polymer.dom(grid).appendChild(item); // is important to use Polymer.dom()
+grid.appendChild(item);
 grid.reflow();
 ```
 
@@ -98,17 +101,17 @@ grid.reflow();
 
 ### For &lt;bin-packing-grid&gt;:
 
-Attribute     | Options     | Default      | Description
----           | ---         | ---          | ---
-`cellSize`    | *number*    | `100`        | Size in pixels for each cell
-`gutterSize`  | *number*    | `5`          | Size in pixels for the space used to separate elements
+Property     | Attribute     | Options     | Default      | Description
+---          | ---           | ---         | ---          | ---
+`cellSize`   | `cell-size`   | *number*    | `100`        | Size in pixels for each cell
+`gutterSize` | `gutter-size` | *number*    | `5`          | Size in pixels for the space used to separate elements
 
 ### For &lt;bin-packing-item&gt;:
 
-Attribute     | Options     | Default      | Description
----           | ---         | ---          | ---
-`rows`        | *number*    | `1`          | Height of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
-`cols`        | *number*    | `1`          | Width of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
+Property     | Attribute     | Options     | Default      | Description
+---          | ---           | ---         | ---          | ---
+`rows`       | `rows`        | *number*    | `1`          | Height of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
+`cols`       | `cols`        | *number*    | `1`          | Width of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 
 ## Contributing
 

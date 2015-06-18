@@ -32,6 +32,18 @@ module.exports = function(grunt) {
         'demo/*', 'src/*', 'index.html'
       ]
     },
+    vulcanize: {
+      default: {
+        options: {
+          inline: true,
+          'strip-excludes' : false
+        },
+        files: {
+          'dist/bin-packing-grid.html' : 'dist/bin-packing-grid.html'
+        }
+      }
+    },
+    clean : [ 'dist/bin-packing-grid.js' ],
     'replace': {
       example: {
         src: ['src/*'],
@@ -49,9 +61,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-vulcanize');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   grunt.registerTask('lint',  ['jslint']);
-  grunt.registerTask('build',  ['jslint', 'replace', 'uglify']);
+  grunt.registerTask('build',  ['jslint', 'replace', 'uglify', 'vulcanize', 'clean']);
   grunt.registerTask('deploy', ['gh-pages']);
   grunt.registerTask('server', ['connect']);
 

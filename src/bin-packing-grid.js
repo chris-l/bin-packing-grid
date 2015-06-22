@@ -2,10 +2,9 @@
 /*global window, document, HTMLElement, setInterval, clearInterval*/
 (function () {
   'use strict';
-  var forEach, map, createRow, resizer, importDoc, gridPrototype,
-    itemPrototype, gridProperties, itemProperties;
+  var forEach, map, createRow, resizer, gridPrototype, itemPrototype,
+    gridProperties, itemProperties, declaredProps, addShadowRoot;
 
-  importDoc = (document._currentScript || document.currentScript).ownerDocument;
   map = Function.prototype.call.bind(Array.prototype.map);
   forEach = Function.prototype.call.bind(Array.prototype.forEach);
 
@@ -19,29 +18,36 @@
    * @param {string} [elementName] The name element, used for rewriting the css.
    *                 If omited, it will use the idTemplate as name.
    */
-  function addShadowRoot(obj, idTemplate, elementName) {
-    var template, styleStr, newStyle, hasStyle, dummy;
+  addShadowRoot = (function () {
+    var importDoc, shimStyle;
+    importDoc = (document._currentScript || document.currentScript).ownerDocument;
 
-    obj.root = obj.createShadowRoot();
-    template = importDoc.querySelector('#' + idTemplate);
-    obj.root.appendChild(template.content.cloneNode(true));
-
-    hasStyle = /<style(.|\n)*<\/style>/m;
-    if (window.ShadowDOMPolyfill && hasStyle.test(template.innerHTML)) {
-      dummy = document.createElement('head');
-      dummy.innerHTML = template.innerHTML;
-      styleStr = map(dummy.getElementsByTagName('style'), function (style) {
-        return style.innerHTML
-          .replace(/:host/gm, elementName || idTemplate).replace(/::content/gm, '')
-          .trim();
-      }).join("\n");
-      dummy = null;
-
-      newStyle = document.createElement('style');
-      newStyle.innerHTML = styleStr;
-      document.getElementsByTagName('head')[0].appendChild(newStyle);
+    if (window.ShadowDOMPolyfill) {
+      shimStyle = document.createElement('style');
+      document.head.insertBefore(shimStyle, document.head.firstChild);
     }
-  }
+
+    return function (obj, idTemplate, elementName) {
+      var template, list;
+
+      obj.root = obj.createShadowRoot();
+      template = importDoc.getElementById(idTemplate);
+      obj.root.appendChild(template.content.cloneNode(true));
+
+      if (window.ShadowDOMPolyfill) {
+        list = obj.root.getElementsByTagName('style');
+        Array.prototype.forEach.call(list, function (style) {
+          if (!template.shimmed) {
+            shimStyle.innerHTML += style.innerHTML
+              .replace(/:host\b/gm, elementName || idTemplate)
+              .replace(/::content\b/gm, '');
+          }
+          style.parentNode.removeChild(style);
+        });
+        template.shimmed = true;
+      }
+    };
+  }());
 
 
 
@@ -53,48 +59,68 @@
    * @param {object} obj The element to add the shadow root.
    * @param {object} props Object with the properties.
    */
-  function prepareProperties(obj, props) {
+  declaredProps = (function () {
+    var exports = {};
+
+    function parse(val) {
+      return parseFloat(val || 0, 10);
+    }
     function toHyphens(str) {
       return str.replace(/([A-Z])/g, '-$1').toLowerCase();
     }
-    function convert(val, desc) {
-      if (desc.type === Number) {
-        return parseInt(val, 10);
-      }
-      if (desc.type === String) {
-        return String(val);
-      }
-      return val;
+    function toCamelCase(str) {
+      return str.split('-')
+        .map(function (x, i) {
+          return i === 0 ? x : x[0].toUpperCase() + x.slice(1);
+        }).join('');
     }
-    obj.props = {};
+    exports.serialize = function (val) {
+      return val.toString();
+    };
 
-    Object.keys(props).forEach(function (name) {
-      var attrName, desc, value;
-
-      desc = props[name];
-      attrName = toHyphens(name);
-      value = desc.value;
-      if (typeof value === 'function') {
-        value = value();
+    exports.syncProperty = function (obj, props, attr, val) {
+      var name = toCamelCase(attr);
+      if (props[name]) {
+        obj[name] = parse(val);
       }
+    };
 
-      if (obj.getAttribute(attrName) === null) {
-        obj.setAttribute(attrName, obj.props[name] || value);
-      }
-      Object.defineProperty(obj, name, {
-        get : function () {
-          return convert(obj.getAttribute(attrName), desc) || obj.props[name] || value;
-        },
-        set : function (val) {
-          obj.props[name] = val;
-          obj.setAttribute(attrName, val);
-          if (typeof obj[desc.observer] === 'function') {
-            obj[desc.observer]();
-          }
-        }
+    exports.init = function (obj, props) {
+      Object.defineProperty(obj, 'props', {
+        enumerable : false,
+        configurable : true,
+        value : {}
       });
-    });
-  }
+
+      Object.keys(props).forEach(function (name) {
+        var attrName = toHyphens(name), desc, value;
+
+        desc = props[name].type ? props[name] : { type : props[name] };
+        value = typeof desc.value === 'function' ? desc.value() : desc.value;
+        obj.props[name] = obj[name] || value;
+
+        if (obj.getAttribute(attrName) === null) {
+          obj.setAttribute(attrName, exports.serialize(obj.props[name]));
+        } else {
+          obj.props[name] = parse(obj.getAttribute(attrName), desc.type);
+        }
+        Object.defineProperty(obj, name, {
+          get : function () {
+            return obj.props[name] || parse(obj.getAttribute(attrName), desc.type) || value;
+          },
+          set : function (val) {
+            obj.props[name] = val;
+            obj.setAttribute(attrName, exports.serialize(val));
+            if (typeof obj[desc.observer] === 'function') {
+              obj[desc.observer](val);
+            }
+          }
+        });
+      });
+    };
+
+    return exports;
+  }());
 
 
   /**
@@ -391,7 +417,7 @@
 
   gridPrototype.createdCallback = function () {
     addShadowRoot(this, 'bin-packing-grid');
-    prepareProperties(this, gridProperties);
+    declaredProps.init(this, gridProperties);
     this.elements = this.elements || [];
     this.reflow();
   };
@@ -445,32 +471,17 @@
     this.style.height = (this.rows * this.baseSize - this.gutterSize) + "px";
   };
 
-  /*jslint unparam:true*/
-  itemPrototype.attributeChangedCallback = (function () {
-    function toCamelCase(str) {
-      var parts, head;
-
-      parts = str.split('-');
-      head = parts.shift();
-
-      parts = parts.map(function (x) {
-        return x[0].toUpperCase() + x.slice(1);
-      }).join('');
-
-      return head + parts;
-    }
-    return function (attr, oldVal, newVal) {
-      if (itemProperties[attr]) {
-        this[toCamelCase(attr)] = newVal;
-      }
-    };
-  }());
-  /*jslint unparam:false*/
+  /*jslint unparam: true*/
+  itemPrototype.attributeChangedCallback = function (attr, oldVal, newVal) {
+    declaredProps.syncProperty(this, itemProperties, attr, newVal);
+  };
+  /*jslint unparam: false*/
 
   itemPrototype.createdCallback = function () {
     var parent, interval, that;
 
-    prepareProperties(this, itemProperties);
+    addShadowRoot(this, 'bin-packing-item');
+    declaredProps.init(this, itemProperties);
     that = this;
     parent = this.parentNode;
     if (parent === null) {

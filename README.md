@@ -10,6 +10,10 @@ Also, this element is responsive.
 
 It is created using only vanilla js and it has no dependencies! (except, of course, the webcomponents.js polyfill)
 
+## Demo
+
+[Check it live!](http://chris-l.github.io/bin-packing-grid)
+
 ## Changelog
 
 * 0.2.0
@@ -25,10 +29,6 @@ It is created using only vanilla js and it has no dependencies! (except, of cour
 ## Algorithm
 
 This uses a variation of the best-fit algorithm; it tries to fit each element and check the possible positions but it first gives priority to the one that keeps the height of the grid smaller.
-
-## Demo
-
-[Check it live!](http://chris-l.github.io/bin-packing-grid)
 
 ## Install
 

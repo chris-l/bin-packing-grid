@@ -62,8 +62,20 @@
   declaredProps = (function () {
     var exports = {};
 
-    function parse(val) {
-      return parseFloat(val || 0, 10);
+    function parse(val, type) {
+      switch (type) {
+      case Number:
+        return parseFloat(val || 0, 10);
+      case Boolean:
+        return val !== null;
+      case Object:
+      case Array:
+        return JSON.parse(val);
+      case Date:
+        return new Date(val);
+      default:
+        return val || '';
+      }
     }
     function toHyphens(str) {
       return str.replace(/([A-Z])/g, '-$1').toLowerCase();
@@ -75,13 +87,20 @@
         }).join('');
     }
     exports.serialize = function (val) {
-      return val.toString();
+      if (typeof val === 'string') {
+        return val;
+      }
+      if (typeof val === 'number' || val instanceof Date) {
+        return val.toString();
+      }
+      return JSON.stringify(val);
     };
 
     exports.syncProperty = function (obj, props, attr, val) {
-      var name = toCamelCase(attr);
+      var name = toCamelCase(attr), type;
       if (props[name]) {
-        obj[name] = parse(val);
+        type = props[name].type || props[name];
+        obj[name] = parse(val, type);
       }
     };
 
@@ -100,19 +119,32 @@
         obj.props[name] = obj[name] || value;
 
         if (obj.getAttribute(attrName) === null) {
-          obj.setAttribute(attrName, exports.serialize(obj.props[name]));
+          if (desc.reflectToAttribute) {
+            obj.setAttribute(attrName, exports.serialize(obj.props[name]));
+          }
         } else {
           obj.props[name] = parse(obj.getAttribute(attrName), desc.type);
         }
         Object.defineProperty(obj, name, {
           get : function () {
-            return obj.props[name] || parse(obj.getAttribute(attrName), desc.type) || value;
+            return obj.props[name] || parse(obj.getAttribute(attrName), desc.type);
           },
           set : function (val) {
+            var old = obj.props[name];
             obj.props[name] = val;
-            obj.setAttribute(attrName, exports.serialize(val));
+            if (desc.reflectToAttribute) {
+              if (desc.type === Boolean) {
+                if (val) {
+                  obj.setAttribute(attrName, '');
+                } else {
+                  obj.removeAttribute(attrName);
+                }
+              } else {
+                obj.setAttribute(attrName, exports.serialize(val));
+              }
+            }
             if (typeof obj[desc.observer] === 'function') {
-              obj[desc.observer](val);
+              obj[desc.observer](val, old);
             }
           }
         });

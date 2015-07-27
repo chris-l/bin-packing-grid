@@ -411,11 +411,20 @@
   };
 
   /**
-   * Reflow the grid. (Re)create the "elements" property and resize it.
+   * Reflow the grid.
    * Call this function if you dinamically add <bin-packing-item> elements
    * to the grid.
    */
   gridPrototype.reflow = function () {
+    this.createElementList();
+    resizer();
+  };
+
+
+  /**
+   * (Re)create the "elements" property.
+   */
+  gridPrototype.createElementList = function () {
     var items, that = this;
 
     items = this.querySelectorAll('bin-packing-item');
@@ -438,20 +447,18 @@
         item : item
       };
     });
-
-    if (resizer) {
-      window.removeEventListener('resize', resizer);
-    }
-    resizer = resizeContainer.bind(0, that);
-    window.addEventListener('resize', resizer);
-    resizer();
   };
 
   gridPrototype.createdCallback = function () {
     addShadowRoot(this, 'bin-packing-grid');
     declaredProps.init(this, gridProperties);
     this.elements = this.elements || [];
-    this.reflow();
+    this.createElementList();
+    if (!resizer) {
+      resizer = resizeContainer.bind(0, this);
+      window.addEventListener('resize', resizer);
+    }
+    resizer();
   };
 
   document.registerElement('bin-packing-grid', {

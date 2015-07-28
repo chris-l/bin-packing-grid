@@ -491,6 +491,11 @@
       observer : 'change',
       value : 1
     },
+    detectSize : {
+      type : Boolean,
+      observer : 'detectSizeLoop',
+      value : false
+    },
     baseSize : {
       type : Number,
       observer : 'change',
@@ -508,6 +513,31 @@
     this.style.left = (this.baseSize * this.left) + 'px';
     this.style.width = (this.cols * this.baseSize - this.gutterSize) + "px";
     this.style.height = (this.rows * this.baseSize - this.gutterSize) + "px";
+  };
+
+  itemPrototype.detectSizeLoop = function (start) {
+    var div, parent, inter;
+    div = this.root.querySelector('div');
+    parent = this.parentNode;
+    if (start !== false && parent !== null) {
+      inter = setInterval(function () {
+        if (!this.detectSize) {
+          clearInterval(inter);
+          return;
+        }
+        if (div !== null && (this.prevClientWidth !== div.clientWidth ||
+          this.prevClientHeight !== div.clientHeight)) {
+          this.style.width = 'auto';
+          this.cols = Math.ceil(this.clientWidth / this.baseSize);
+          this.style.height = 'auto';
+          this.rows = Math.ceil(this.clientHeight / this.baseSize);
+          this.prevClientWidth = div.clientWidth;
+          this.prevClientHeight = div.clientHeight;
+          parent.createElementList();
+          packageElements(parent.elements, parent);
+        }
+      }.bind(this), 1);
+    }
   };
 
   /*jslint unparam: true*/
@@ -533,6 +563,9 @@
       clearInterval(interval);
       that.gutterSize = parent.gutterSize;
       that.baseSize = parent.cellSize + parent.gutterSize;
+      if (that.detectSize) {
+        that.detectSizeLoop(true);
+      }
     }, 1);
   };
 

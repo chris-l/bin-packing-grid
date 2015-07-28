@@ -28,8 +28,15 @@
       position  : absolute;
       box-sizing: border-box;
     }
+    :host > div {
+      display   : inline-block;
+      height    : auto;
+      width     : auto;
+    }
   </style>
-  <content></content>
+  <div>
+    <content></content>
+  </div>
 </template>
 
 <script src="bin-packing-grid.js"></script>

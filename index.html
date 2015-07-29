@@ -14,14 +14,40 @@
             document.write('<script src="bower_components/webcomponentsjs/webcomponents.min.js"><\/script>');
       }</script>
 
+    <script>
+      (function () {
+        'use strict';
+        var head, style;
+
+        if (window.WebComponents) {
+          window.addEventListener('WebComponentsReady', function () {
+            document.body.removeAttribute('unresolved');
+          });
+        } else {
+          // Create the same style as webcomponents.js
+          style = document.createElement('style');
+          style.textContent = 'body {transition:opacity ease-in 0.2s;}\n' +
+            'body[unresolved] {opacity:0; display:block; overflow:hidden; position:relative;}';
+          head = document.querySelector('head');
+          head.insertBefore(style, head.firstChild);
+
+          document.addEventListener('DOMContentLoaded', function () {
+            document.body.removeAttribute('unresolved');
+          });
+        }
+      }());
+    </script>
     <!-- Html imports -->
     <link rel="import" href="src/bin-packing-grid.html">
     <style>
       html, body {
+        color: #7D787F;
         margin: 0;
         height: 100%;
+        line-height: 28px;
         width: 100%;
         font-family: Helvetica, Arial, sans-serif;
+        font-size: 16px;
       }
       h1 {
         color: inherit;
@@ -33,90 +59,82 @@
       }
       bin-packing-grid {
         margin: auto;
-      }
-      bin-packing-item {
-        background-color: #84A4A8;
-        font-weight: 400;
-        font-size: 18px;
-        padding: 15px;
-        transition-property: left, top;
-        transition-duration: 700ms;
         color: white;
       }
+      bin-packing-grid bin-packing-item {
+        background-color: rgb(128, 125, 123);
+        border: 0px solid white;
+        box-shadow: 3px 3px 15px black;
+        font-weight: 400;
+        font-size: 18px;
+        padding: 0px;
+        text-align: center;
+        transition-property: left, top;
+        transition-duration: 700ms;
+      }
+      bin-packing-item.text {
+        overflow: auto;
+      }
+      bin-packing-item.text div {
+        background-color: rgb(34, 59, 64);
+        color: rgb(182, 182, 178);
+        font-size: 16px;
+        padding: 20px;
+      }
       bin-packing-grid::shadow .bin-packing-filler {
-        background-color: #84A4A8;
+        background-color: rgb(128, 125, 123);
+        border: 0px solid white;
+        box-shadow: 3px 3px 15px black;
       }
       bin-packing-grid > .bin-packing-filler {
-        background-color: #84A4A8;
+        background-color: rgb(128, 125, 123);
+        border: 0px solid white;
+        box-shadow: 3px 3px 15px black;
       }
     </style>
   </head>
-  <body>
+  <body unresolved>
 
     <div class="container-fluid">
-      <h1>&lt;bin-packing-grid&gt; demo</h1>
-      <p>The grid is responsive.</p>
-      <p>Also, this demo uses a very simple CSS style using <b>transitions</b> to animate the movement of elements. Try to resize the window!</p>
-      <p>By the way, don't worry, using or not animations is completly up to you, <b>and by default it does not include any animation.</b></p>
+      <h1>&lt;bin-packing-grid&gt;</h1>
+      <p>
+        <iframe src="http://ghbtns.com/github-btn.html?user=chris-l&amp;repo=bin-packing-grid&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="130" height="30"></iframe>
+        <iframe src="http://ghbtns.com/github-btn.html?user=chris-l&amp;repo=bin-packing-grid&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="130" height="30"></iframe>
+      </p>
+      <p><strong>&lt;bin-packing-grid&gt;</strong> is a custom element that fit elements into a grid using a bin-packing algorithm, in a masonry-like way. The result is similar to the grid used on pinterest and other sites.</p>
+      <p>It's created using only vanilla js, it has no dependencies, and is framework agnostic!</p>
+      <p>Also, this demo uses a very simple CSS style using <strong>transitions</strong> to animate the movement of elements. <em>Try to resize the window!</em><br>
+      (By the way, don't worry, using or not animations is completly up to you, <strong>and while is really easy to add them, by default it does not include any animation.</strong>)</p>
+      <p>MIT license. For installation and more information, check the <a href="https://github.com/chris-l/bin-packing-grid">github repository</a>.</p>
+      <p>Oh! And the beautiful photos are from <a href="http://unsplash.com">unsplash.com</a></p>
 
-      <bin-packing-grid cell-size="150">
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="3" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="3" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="3" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
-        <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="2">2x2</bin-packing-item>
-        <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
+      <bin-packing-grid cell-size="60" gutter-size="15">
+        <bin-packing-item detect-size><img src="img/photo-1427805371062-cacdd21273f1.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429032021766-c6a53949594f.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429277005502-eed8e872fe52.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429277096327-11ee3b761c93.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429277158984-614d155e0017.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1430747562296-5556d17a15a5.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1433424007598-bd5d102e8597.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1433733071959-30cd185d14a8.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1433838552652-f9a46b332c40.jpg"></bin-packing-item>
+        <bin-packing-item rows="5" cols="4" class="text"><div><h2>Some Text</h2><p>Contrary to the other elements, this one has explicitly set the number of rows and cols.</p><p><i>Ut ac consectetur mi. In in leo et purus ornare efficitur. Nunc placerat leo tellus, in mollis lorem bibendum sit amet. Sed pellentesque vestibulum accumsan. Mauris eget ante eget sapien vehicula ultricies a at dui. Ut pretium dolor ac velit dictum, eu rhoncus tortor venenatis. Cras mollis ligula et viverra iaculis. Donec aliquam lobortis augue, sed pretium sem semper non. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac leo nunc.</i></p><p><i>Proin dapibus accumsan ligula id volutpat. Nulla et nibh quis nisl convallis blandit in at massa. Nulla facilisi. Mauris urna sem, malesuada non dui volutpat, eleifend finibus mauris. In vel semper justo, tincidunt elementum metus. In nec est eget odio rhoncus sodales ut non sem. Phasellus imperdiet nibh vel erat commodo ultricies. Vestibulum sit amet aliquet urna.</i></p>
+        </div></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1434145175661-472d90344c15.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1422207134147-65fb81f59e38.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1427805371062-cacdd21273f1.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1428930377079-45a584b6dd6b.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429032021766-c6a53949594f.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429095687696-3227bb0aa9a8.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1428894976381-853e04af6262.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1434145175661-472d90344c15.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429277005502-eed8e872fe52.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429277096327-11ee3b761c93.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1429277158984-614d155e0017.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1430747562296-5556d17a15a5.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1433424007598-bd5d102e8597.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1433733071959-30cd185d14a8.jpg"></bin-packing-item>
+        <bin-packing-item detect-size><img src="img/photo-1433838552652-f9a46b332c40.jpg"></bin-packing-item>
       </bin-packing-grid>
     </div>
   </body>

@@ -10,13 +10,33 @@
       display   : block;
       position  : relative;
     }
-    :host ::content > bin-packing-item, :host > .bin-packing-filler, :host ::content > .bin-packing-filler {
+    :host .bin-packing-filler, :host ::content .bin-packing-filler {
+      border    : 1px solid;
       display   : block;
       position  : absolute;
       box-sizing: border-box;
     }
   </style>
   <content></content>
+</template>
+
+<template id="bin-packing-item">
+  <style>
+    :host {
+      border    : 1px solid;
+      display   : block;
+      position  : absolute;
+      box-sizing: border-box;
+    }
+    :host > div {
+      display   : inline-block;
+      height    : auto;
+      width     : auto;
+    }
+  </style>
+  <div>
+    <content></content>
+  </div>
 </template>
 
 <script src="bin-packing-grid.js"></script>

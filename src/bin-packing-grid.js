@@ -1,5 +1,5 @@
 /*jslint indent: 2, regexp: true, nomen: true */
-/*global window, document, HTMLElement, setInterval, clearInterval*/
+/*global window, document, HTMLElement, setInterval, clearInterval, setTimeout*/
 (function () {
   'use strict';
   var forEach, map, createRow, resizer, gridPrototype, itemPrototype,
@@ -348,7 +348,7 @@
    * @param {object} element The bin-packing-grid element.
    */
   function resizeContainer(element) {
-    var width, inter;
+    var width;
 
     element.style.width = 'auto';
 

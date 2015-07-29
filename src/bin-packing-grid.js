@@ -156,18 +156,6 @@
 
 
   /**
-   * Return the style of an element.
-   *
-   * @param {object} element The element to check the style
-   * @param {string} name The name of the style to check
-   */
-  function getStyle(element, name) {
-    return document.defaultView.getComputedStyle(element, null)
-      .getPropertyValue(name);
-  }
-
-
-  /**
    * Clone a grid. A grid is an array of arrays, and each element of those
    * arrays contains either a 1 or a 0.
    *
@@ -363,14 +351,9 @@
     var width, inter;
 
     element.style.width = 'auto';
-    inter = setInterval(function () {
 
-      width = parseInt(getStyle(element, 'width'), 10);
-
-      if (isNaN(width)) {
-        return;
-      }
-      clearInterval(inter);
+    setTimeout(function () {
+      width = element.clientWidth;
 
       element.columns = (function () {
         var cols, widest;
@@ -391,7 +374,7 @@
       };
       element.style.width = (element.columns * (element.cellSize + element.gutterSize) - element.gutterSize) + 'px';
       packageElements(element.elements, element);
-    }, 1);
+    }, 0);
   }
 
   /**

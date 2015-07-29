@@ -17,6 +17,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
+    "img",
     "bower_components"
   ]
 }

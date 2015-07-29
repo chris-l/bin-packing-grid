@@ -29,7 +29,7 @@ module.exports = function(grunt) {
       src: [
         'bower_components/**/*',
         '!bower_components/bin-packing-grid/**/*',
-        'demo/*', 'src/*', 'index.html'
+        'demo/*', 'src/*', 'img/*', 'index.html'
       ]
     },
     vulcanize: {

@@ -16,6 +16,9 @@ It is created using only vanilla js and it has no dependencies! (except, of cour
 
 ## Changelog
 
+* 0.2.1
+ - New `detect-size` attribute. Using it, is not necessary to manually set the `rows` and `cols` and instead, it tries to automatically detect how many are necessary.
+ - Added a simple border to each bin-packing-item, to make visible the elements if no custom css is added.
 * 0.2.0
  - Removed Polymer as dependency. Now is a vanilla js component!
  - The dist file is vulcanized.
@@ -60,6 +63,7 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
     <bin-packing-grid cell-size="150">
       <bin-packing-item rows="1" cols="2">2x1</bin-packing-item>
       <bin-packing-item rows="2" cols="1">1x2</bin-packing-item>
+      <bin-packing-item detect-size><img src="someimage.jpg"></bin-packing-item>
       <bin-packing-item rows="2" cols="3">3x2</bin-packing-item>
     </bin-packing-grid>
     ```
@@ -68,9 +72,11 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
 
 The `<bin-packing-grid>` creates a grid formed by squares, which each side has the measure of `cell-size` in pixels (default 100). Each one of those squares is separated by a gutter determined by `gutter-size` also in pixels (default 5).
 
-The size of each `<bin-packing-item>` element is determined by the amount of `rows` (number of squares, plus gutter space, vertically) and `cols` (number of squares, plus gutter space, horizontally)
+The size of each `<bin-packing-item>` element is determined by the amount of `rows` (number of squares, plus gutter space, vertically) and `cols` (number of squares, plus gutter space, horizontally).
 
-The `<bin-packing-item>` elements don't have colours, backgrounds, borders or any visual style by default. The only style properties added are the ones required to resize and positionate the element into the grid.
+Instead of manually specifying `rows` and `cols`, is possible to add the `detect-size` attribute (with any or no value) to try to detect the required number of `rows` and `cols`.
+
+The `<bin-packing-item>` elements don't have colours, backgrounds or any visual style by default (except a border to make it visible). The only style properties added are the ones required to set the size and positionate the element into the grid.
 Is up to the developer to add any other desired style. By using the **transition** css property, is possible to animate the movement of elements.
 
 To fill the gaps, `<div>` elements with the **bin-packing-filler** class will be created. Those elements are created into the shadow dom. You can target that element for styling with a rule like this:
@@ -101,17 +107,18 @@ grid.reflow();
 
 ### For &lt;bin-packing-grid&gt;:
 
-Property     | Attribute     | Options     | Default      | Description
+Property     | Attribute     | Type        | Default      | Description
 ---          | ---           | ---         | ---          | ---
 `cellSize`   | `cell-size`   | *number*    | `100`        | Size in pixels for each cell
 `gutterSize` | `gutter-size` | *number*    | `5`          | Size in pixels for the space used to separate elements
 
 ### For &lt;bin-packing-item&gt;:
 
-Property     | Attribute     | Options     | Default      | Description
+Property     | Attribute     | Type        | Default      | Description
 ---          | ---           | ---         | ---          | ---
 `rows`       | `rows`        | *number*    | `1`          | Height of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 `cols`       | `cols`        | *number*    | `1`          | Width of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
+`detectSize` | `detect-size` | *boolean*   | `false`      | Automatically set the `rows` and `cols` required for the content inside of the &lt;bin-packing-item&gt; element.
 
 ## Contributing
 

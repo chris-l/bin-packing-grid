@@ -16,6 +16,8 @@ It is created using only vanilla js and it has no dependencies! (except, of cour
 
 ## Changelog
 
+* 0.2.2
+ - Fix: It was incorrectly using the rows instead of cols while checking for the wide elements.
 * 0.2.1
  - New `detect-size` attribute. Using it, is not necessary to manually set the `rows` and `cols` and instead, it tries to automatically detect how many are necessary.
  - Added a simple border to each bin-packing-item, to make visible the elements if no custom css is added.

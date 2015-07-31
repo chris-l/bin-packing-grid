@@ -360,8 +360,8 @@
 
         cols = Math.floor(width / (element.cellSize + element.gutterSize));
         widest = element.elements.slice(0).sort(function (a, b) {
-          return a.rows > b.rows;
-        }).pop().rows;
+          return a.cols > b.cols;
+        }).pop().cols;
         // The minimal width of the grid is the width of the widest element.
         return cols < widest ? widest : cols;
       }());

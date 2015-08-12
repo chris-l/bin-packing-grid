@@ -20,6 +20,7 @@
    */
   addShadowRoot = (function () {
     var importDoc, shimStyle;
+
     importDoc = (document._currentScript || document.currentScript).ownerDocument;
 
     if (window.ShadowDOMPolyfill) {
@@ -27,7 +28,7 @@
       document.head.insertBefore(shimStyle, document.head.firstChild);
     }
 
-    return function (obj, idTemplate, elementName) {
+    return function (obj, idTemplate, tagName) {
       var template, list;
 
       obj.root = obj.createShadowRoot();
@@ -37,10 +38,13 @@
       if (window.ShadowDOMPolyfill) {
         list = obj.root.getElementsByTagName('style');
         Array.prototype.forEach.call(list, function (style) {
+          var name = tagName || idTemplate;
           if (!template.shimmed) {
             shimStyle.innerHTML += style.innerHTML
-              .replace(/:host\b/gm, elementName || idTemplate)
-              .replace(/::content\b/gm, '');
+              .replace(/:host\(([^\)]+)\)/gm, name + '$1')
+              .replace(/:host\b/gm, name)
+              .replace(/::shadow\b/gm, ' ')
+              .replace(/::content\b/gm, ' ');
           }
           style.parentNode.removeChild(style);
         });
@@ -408,14 +412,14 @@
    * (Re)create the "elements" property.
    */
   gridPrototype.createElementList = function () {
-    var items, that = this;
+    var items, that = this, elements;
 
     items = this.querySelectorAll('bin-packing-item');
     forEach(items, function (item) {
       item.gutterSize = that.gutterSize;
       item.baseSize = that.cellSize + that.gutterSize;
     });
-    this.elements = map(items, function (item) {
+    elements = map(items, function (item) {
       var cols, rows;
 
       cols = typeof item.cols === 'number' ? item.cols :
@@ -429,6 +433,11 @@
         rows : rows,
         item : item
       };
+    });
+
+    // filter out hidden elements.
+    this.elements = elements.filter(function (element) {
+      return element.item.getAttribute('hidden') === null;
     });
   };
 

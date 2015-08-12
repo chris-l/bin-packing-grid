@@ -1,6 +1,6 @@
 {
   "name": "bin-packing-grid",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Web component that fit elements into a grid using a bin-packing algorithm.",
   "license": "MIT",
   "main": "dist/bin-packing-grid.html",

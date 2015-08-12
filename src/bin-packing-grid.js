@@ -412,14 +412,14 @@
    * (Re)create the "elements" property.
    */
   gridPrototype.createElementList = function () {
-    var items, that = this;
+    var items, that = this, elements;
 
     items = this.querySelectorAll('bin-packing-item');
     forEach(items, function (item) {
       item.gutterSize = that.gutterSize;
       item.baseSize = that.cellSize + that.gutterSize;
     });
-    this.elements = map(items, function (item) {
+    elements = map(items, function (item) {
       var cols, rows;
 
       cols = typeof item.cols === 'number' ? item.cols :
@@ -433,6 +433,11 @@
         rows : rows,
         item : item
       };
+    });
+
+    // filter out hidden elements.
+    this.elements = elements.filter(function (element) {
+      return element.item.getAttribute('hidden') === null;
     });
   };
 

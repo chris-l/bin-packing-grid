@@ -16,6 +16,8 @@ It is created using only vanilla js and it has no dependencies! (except, of cour
 
 ## Changelog
 
+* 0.2.3
+ - Using the HTML5 `hidden` attribute to make an `bin-packing-item` element to not use space on the grid.
 * 0.2.2
  - Fix: It was incorrectly using the rows instead of cols while checking for the wide elements.
 * 0.2.1
@@ -121,6 +123,7 @@ Property     | Attribute     | Type        | Default      | Description
 `rows`       | `rows`        | *number*    | `1`          | Height of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 `cols`       | `cols`        | *number*    | `1`          | Width of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 `detectSize` | `detect-size` | *boolean*   | `false`      | Automatically set the `rows` and `cols` required for the content inside of the &lt;bin-packing-item&gt; element.
+`hidden`     | `hidden`      | *boolean*   | `false`      | Using the attribute `hidden` will case the element not only to be not displayed, but also it will not use space on the grid.
 
 ## Contributing
 

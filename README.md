@@ -123,7 +123,7 @@ Property     | Attribute     | Type        | Default      | Description
 `rows`       | `rows`        | *number*    | `1`          | Height of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 `cols`       | `cols`        | *number*    | `1`          | Width of the item, using the cellSize of the &lt;bin-packing-grid&gt; parent as unit.
 `detectSize` | `detect-size` | *boolean*   | `false`      | Automatically set the `rows` and `cols` required for the content inside of the &lt;bin-packing-item&gt; element.
-`hidden`     | `hidden`      | *boolean*   | `false`      | Using the attribute `hidden` will case the element not only to be not displayed, but also it will not use space on the grid.
+`hidden`     | `hidden`      | *boolean*   | `false`      | Using the attribute `hidden` will cause the element not only to be not displayed, but also it will not use space on the grid.
 
 ## Contributing
 

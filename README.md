@@ -49,6 +49,8 @@ Or [download as ZIP](https://github.com/chris-l/bin-packing-grid/archive/master.
 
 ## Usage
 
+# Remember this will only work on server either local or hosted
+
 1. Import Web Components' polyfill:
 
     ```html

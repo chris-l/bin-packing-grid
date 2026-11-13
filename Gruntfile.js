@@ -1,14 +1,6 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    'jslint'  : {
-      all     : {
-        src : [ 'src/*.js' ],
-        directives : {
-          indent : 2
-        }
-      }
-    },
     'uglify'  : {
         target : {
           files : { 'dist/bin-packing-grid.js' : 'src/bin-packing-grid.js' }
@@ -56,7 +48,6 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-text-replace');
@@ -64,8 +55,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-vulcanize');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
-  grunt.registerTask('lint',  ['jslint']);
-  grunt.registerTask('build',  ['jslint', 'replace', 'uglify', 'vulcanize', 'clean']);
+  grunt.registerTask('build',  ['replace', 'uglify', 'vulcanize', 'clean']);
   grunt.registerTask('deploy', ['gh-pages']);
   grunt.registerTask('server', ['connect']);
 

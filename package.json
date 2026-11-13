@@ -1,13 +1,12 @@
 {
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-cli": "~0.1.9",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-connect": "~0.9.0",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-gh-pages": "~0.9.1",
-    "grunt-jslint": "^1.1.14",
-    "grunt-vulcanize": "^0.6.4",
-    "grunt-text-replace": "~0.4.0"
+    "grunt": "1.6.3",
+    "grunt-cli": "1.5.0",
+    "grunt-contrib-clean": "2.0.1",
+    "grunt-contrib-connect": "5.0.1",
+    "grunt-contrib-uglify": "5.2.2",
+    "grunt-gh-pages": "4.0.0",
+    "grunt-text-replace": "0.4.0",
+    "grunt-vulcanize": "1.0.0"
   }
 }

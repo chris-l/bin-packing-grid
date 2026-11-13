@@ -363,9 +363,9 @@
         var cols, widest;
 
         cols = Math.floor(width / (element.cellSize + element.gutterSize));
-        widest = element.elements.slice(0).sort(function (a, b) {
-          return a.cols > b.cols;
-        }).pop().cols;
+        widest = element.elements.reduce(function (max, item) {
+          return item.cols > max ? item.cols : max;
+        }, 1);
         // The minimal width of the grid is the width of the widest element.
         return cols < widest ? widest : cols;
       }());
@@ -526,7 +526,12 @@
           this.prevClientWidth = div.clientWidth;
           this.prevClientHeight = div.clientHeight;
           parent.createElementList();
-          packageElements(parent.elements, parent);
+          if (this.cols > parent.columns) {
+            // The item grew wider than the grid: recompute the column count.
+            resizeContainer(parent);
+          } else {
+            packageElements(parent.elements, parent);
+          }
         }
       }.bind(this), 1);
     }
